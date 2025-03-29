@@ -78,16 +78,26 @@ function App() {
       </header>
       <main>
         <form onSubmit={handleSubmit} className="input-form">
-          <div className="form-group">
-            <label htmlFor="country">Country:</label>
-            <input
-              id="country"
-              type="text"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              placeholder="Enter country name"
-            />
-          </div>
+        <div className="form-group">
+  <label htmlFor="country">Country:</label>
+  <select
+    id="country"
+    value={country}
+    onChange={(e) => setCountry(e.target.value)}
+  >
+    <option value="" disabled>Select a country</option>
+    <option value="Brazil">Brazil</option>
+    <option value="France">France</option>
+    <option value="USA">USA</option>
+    <option value="Canada">Canada</option>
+    <option value="Japan">Japan</option>
+    <option value="Germany">Germany</option>
+    <option value="China">China</option>
+    <option value="UK">UK</option>
+    <option value="India">India</option>
+    <option value="Australia">Australia</option>
+  </select>
+</div>
           <div className="form-group">
             <label htmlFor="months">Months to Predict:</label>
             <input
@@ -153,7 +163,7 @@ function App() {
         </section>
       )}
       <footer>
-        <p>Powered by xAI Economic Prediction Engine</p>
+        <p>Created by @GITOLI Remy Claudien</p>
       </footer>
     </div>
   );

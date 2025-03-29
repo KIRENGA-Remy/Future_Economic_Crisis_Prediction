@@ -50,6 +50,14 @@ main {
   font-size: 16px;
 }
 
+.form-group select {
+  width: 100%; /* Matches typical input width */
+  padding: 8px; /* Consistent padding */
+  font-size: 16px; /* Consistent font size */
+  border: 1px solid #ccc; /* Matches typical input border */
+  border-radius: 4px; /* Optional: rounded corners */
+}
+
 button {
   padding: 12px 24px;
   background: #007bff;
