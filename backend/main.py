@@ -18,7 +18,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 class EconomicData(BaseModel):
     country: str
     prediction_months: int = 1
@@ -34,7 +33,7 @@ def train_model(df):
     features = ['Month', 'Year', 'Inflation Rate (%)', 'GDP Growth Rate (%)', 
                 'Unemployment Rate (%)', 'Interest Rate (%)']
     targets = ['Inflation Rate (%)', 'GDP Growth Rate (%)', 
-              'Unemployment Rate (%)', 'Interest Rate (%)', 'Stock Index Value']
+               'Unemployment Rate (%)', 'Interest Rate (%)', 'Stock Index Value']
     models = {}
     for country in df['Country'].unique():
         country_df = df[df['Country'] == country]
@@ -55,6 +54,61 @@ if os.path.exists('models.pkl'):
 else:
     df = load_and_prepare_data()
     models = train_model(df)
+
+def analyze_predictions(predictions):
+    analysis = {"recommendations": [], "status": "Good"}
+    last_pred = predictions[-1]  # Analyze the last predicted month
+    
+    # Inflation Rate Analysis
+    if last_pred["Inflation Rate (%)"] > 5:
+        analysis["recommendations"].append(
+            "High Inflation Detected: Consider tightening monetary policy, increasing interest rates, or reducing government spending to control price levels."
+        )
+        analysis["status"] = "Warning"
+    elif last_pred["Inflation Rate (%)"] < 1:
+        analysis["recommendations"].append(
+            "Low Inflation Detected: Stimulate the economy with lower interest rates or increased government spending to avoid deflation."
+        )
+
+    # GDP Growth Rate Analysis
+    if last_pred["GDP Growth Rate (%)"] < 2:
+        analysis["recommendations"].append(
+            "Low GDP Growth: Implement fiscal stimulus, tax cuts, or infrastructure investments to boost economic activity."
+        )
+        analysis["status"] = "Warning"
+    elif last_pred["GDP Growth Rate (%)"] > 5:
+        analysis["recommendations"].append(
+            "High GDP Growth: Monitor for overheating; consider gradual policy adjustments to ensure sustainable growth."
+        )
+
+    # Unemployment Rate Analysis
+    if last_pred["Unemployment Rate (%)"] > 6:
+        analysis["recommendations"].append(
+            "High Unemployment: Create job programs, incentivize hiring through tax breaks, or invest in workforce training."
+        )
+        analysis["status"] = "Warning"
+    elif last_pred["Unemployment Rate (%)"] < 3:
+        analysis["recommendations"].append(
+            "Low Unemployment: Watch for wage inflation; ensure labor market flexibility to maintain balance."
+        )
+
+    # Interest Rate Analysis
+    if last_pred["Interest Rate (%)"] > 5:
+        analysis["recommendations"].append(
+            "High Interest Rates: Assess borrowing costs; consider easing rates if growth slows."
+        )
+    elif last_pred["Interest Rate (%)"] < 1:
+        analysis["recommendations"].append(
+            "Low Interest Rates: Encourage investment but monitor for asset bubbles."
+        )
+
+    # If no issues, provide positive feedback
+    if not analysis["recommendations"]:
+        analysis["recommendations"].append(
+            "Economy appears stable: Maintain current policies and monitor trends for sustained growth."
+        )
+
+    return analysis
 
 @app.post("/predict")
 async def predict_economic_data(data: EconomicData):
@@ -85,6 +139,9 @@ async def predict_economic_data(data: EconomicData):
                 if target != 'Stock Index Value':
                     last_data[target] = prediction
             predictions.append(pred)
-        return {"predictions": predictions}
+        
+        # Add analysis
+        analysis = analyze_predictions(predictions)
+        return {"predictions": predictions, "analysis": analysis}
     except Exception as e:
         return {"error": str(e)}

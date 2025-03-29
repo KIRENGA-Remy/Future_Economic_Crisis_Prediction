@@ -19,6 +19,7 @@ function App() {
   const [country, setCountry] = useState('');
   const [months, setMonths] = useState(1);
   const [predictions, setPredictions] = useState(null);
+  const [analysis, setAnalysis] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -32,6 +33,7 @@ function App() {
     setLoading(true);
     setError(null);
     setPredictions(null);
+    setAnalysis(null);
     
     try {
       console.log('Sending request to backend:', { country, prediction_months: parseInt(months) });
@@ -41,6 +43,7 @@ function App() {
       });
       console.log('Response received:', response.data);
       setPredictions(response.data.predictions);
+      setAnalysis(response.data.analysis);
     } catch (err) {
       console.error('Error details:', err);
       setError(err.response?.data?.error || 'An error occurred while fetching predictions');
@@ -136,6 +139,19 @@ function App() {
           </section>
         )}
       </main>
+      {analysis && (
+        <section className="analysis-section">
+          <h2>Economic Situation Analysis</h2>
+          <div className={`analysis-card ${analysis.status.toLowerCase()}`}>
+            <h3>Status: {analysis.status}</h3>
+            <ul>
+              {analysis.recommendations.map((rec, index) => (
+                <li key={index}>{rec}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
       <footer>
         <p>Powered by xAI Economic Prediction Engine</p>
       </footer>
