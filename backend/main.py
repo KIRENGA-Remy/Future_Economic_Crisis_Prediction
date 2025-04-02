@@ -7,12 +7,15 @@ from sklearn.ensemble import RandomForestRegressor
 from typing import List
 import pickle
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  
+    allow_origins=[os.getenv("FRONTEND_URL")],  
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
