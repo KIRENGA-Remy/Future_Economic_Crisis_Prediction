@@ -37,7 +37,8 @@ function App() {
     
     try {
       console.log('Sending request to backend:', { country, prediction_months: parseInt(months) });
-      const response = await axios.post(`${process.env.BACKEND_URL}/predict`, {
+      // const response = await axios.post(`${process.env.BACKEND_URL}/predict`, {
+        const response = await axios.post('http://127.0.0.1:8000/predict', {
         country,
         prediction_months: parseInt(months)
       });

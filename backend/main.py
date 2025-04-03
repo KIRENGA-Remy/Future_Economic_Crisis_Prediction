@@ -7,15 +7,16 @@ from sklearn.ensemble import RandomForestRegressor
 from typing import List
 import pickle
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://future-economic-crisis-prediction.vercel.app"],  
+    # allow_origins=['https://future-economic-crisis-prediction.vercel.app'], 
+    allow_origins=['https://future-economic-crisis-prediction.vercel.app'],  
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
