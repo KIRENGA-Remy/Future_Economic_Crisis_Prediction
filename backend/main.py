@@ -15,11 +15,12 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    # allow_origins=['https://future-economic-crisis-prediction.vercel.app'], 
-    allow_origins=['https://future-economic-crisis-prediction.vercel.app'],  
+    allow_origins=['https://future-economic-crisis-prediction.vercel.app'], 
+    # allow_origins=['http://localhost:3000'],  
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
+    #uvicorn main:app --host 0.0.0.0 --port 10000
 )
 
 class EconomicData(BaseModel):
